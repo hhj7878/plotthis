@@ -131,7 +131,9 @@ DimPlotAtomic <- function(
     if (length(features) > 1 && !is.null(facet_by)) {
         stop("Cannot specify 'facet_by' with multiple features. The plot will be faceted by features.")
     }
-    pt_size <- pt_size %||% min(3000 / nrow(data), 0.6)
+    if(is.null(pt_size)){
+    pt_size <- pt_size %||% min(3000/nrow(data), 0.6)
+    }
     raster <- raster %||% (nrow(data) > 1e5)
     xlab <- xlab %||% dims[1]
     ylab <- ylab %||% dims[2]
@@ -386,16 +388,16 @@ DimPlotAtomic <- function(
             p <- p + scattermore::geom_scattermore(
                 data = data[is.na(data[[group_by]]), , drop = FALSE],
                 mapping = aes(x = !!sym(dims[1]), y = !!sym(dims[2])), color = bg_color,
-                pointsize = ceiling(pt_size), alpha = pt_alpha, pixels = raster_dpi
+                pointsize = ceiling(), alpha = pt_alpha, pixels = raster_dpi
             ) + scattermore::geom_scattermore(
                 data = data[!is.na(data[[group_by]]), , drop = FALSE],
                 mapping = aes(x = !!sym(dims[1]), y = !!sym(dims[2]), color = !!sym(group_by)),
-                pointsize = ceiling(pt_size), alpha = pt_alpha, pixels = raster_dpi
+                pointsize = ceiling(), alpha = pt_alpha, pixels = raster_dpi
             )
         } else {  # features
             p <- p + scattermore::geom_scattermore(
                 mapping = aes(x = !!sym(dims[1]), y = !!sym(dims[2])), color = bg_color,
-                pointsize = ceiling(pt_size), alpha = pt_alpha, pixels = raster_dpi
+                pointsize = ceiling(), alpha = pt_alpha, pixels = raster_dpi
             ) + scattermore::geom_scattermore(
                 mapping = aes(x = !!sym(dims[1]), y = !!sym(dims[2]), color = !!sym(colorby)),
                 pointsize = ceiling(pt_size), alpha = pt_alpha, pixels = raster_dpi
